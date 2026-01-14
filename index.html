@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis 15 Años - Luzmila</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <div class="invite-card" id="card">
+            <header>
+                <p class="subtitle">ESTÁS INVITADO A</p>
+                <h1>Mis 15 Años</h1>
+                <h2 class="name">Luzmila</h2>
+            </header>
+
+            <section class="details">
+                <div class="date-box">
+                    <span>DOMINGO</span>
+                    <span class="day">15</span>
+                    <span>FEBRERO</span>
+                </div>
+                <p class="time">21:30 HORAS</p>
+                <hr>
+                <p class="location">**Salón de Eventos "Luz y Fuerza" **
+            </section>
+
+            <button id="openModalBtn" class="btn">CONFIRMAR ASISTENCIA</button>
+            
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+    <div class="modal-content">
+        <h3>Confirmar Asistencia</h3>
+            <form id="rsvpForm">
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+                <input type="text" id="apellido" name="apellido" placeholder="Apellido" required>
+                <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required>
+                <input type="number" id="integrantes" name="integrantes" placeholder="Cantidad de personas" min="1" required>
+                
+                <div class="form-buttons">
+                    <button type="submit" class="btn-confirm" id="submitBtn">ENVIAR</button>
+                    <button type="button" id="closeModalBtn" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
