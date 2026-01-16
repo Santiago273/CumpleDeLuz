@@ -1,99 +1,78 @@
-/**
- * CONFIGURACIÓN INICIAL
- * 1. Crea un Google Sheet con estos encabezados en la Fila 1: 
- * nombre, apellido, telefono, integrantes, fecha
- * 2. Pega tu API URL de SheetDB abajo.
- */
-const API_URL = 'https://sheetdb.io/api/v1/1usixyvha4w93'; 
+const API_URL = 'https://sheetdb.io/api/v1/1usixyvha4w93';
 
-// --- 1. Animación de entrada ---
-window.addEventListener('load', () => {
-    const card = document.getElementById('card');
-    if(card) card.classList.add('visible');
-});
+// Esta función es la que hace la "magia" de revisar antes de guardar
+async function validarInvitado(nombreIngresado, apellidoIngresado, cantidadSolicitada) {
+    try {
+        // Buscamos en la hoja específica llamada ListaControl
+        const response = await fetch(`${API_URL}?sheet=ListaControl`);
+        const listaPermitida = await response.json();
 
-// --- 2. Manejo del Modal ---
-const modal = document.getElementById('modal');
-const openModalBtn = document.getElementById('openModalBtn');
-const closeModalBtn = document.getElementById('closeModalBtn');
+        // Buscamos si existe el nombre y apellido en tu lista de control
+        const coincidencia = listaPermitida.find(inv => 
+            inv.nombre.toLowerCase().trim() === nombreIngresado.toLowerCase().trim() &&
+            inv.apellido.toLowerCase().trim() === apellidoIngresado.toLowerCase().trim()
+        );
+
+        if (!coincidencia) {
+            return { error: "No te encontramos en la lista. Revisa si escribiste bien tu nombre." };
+        }
+
+        if (parseInt(cantidadSolicitada) > parseInt(coincidencia.cupo)) {
+            return { error: `Cupo excedido. Tu invitación es para máximo ${coincidencia.cupo} personas.` };
+        }
+
+        return { exito: true };
+    } catch (err) {
+        return { error: "Error de conexión. Intenta de nuevo." };
+    }
+}
+
+// Aquí es donde se activa el formulario al darle clic al botón
 const rsvpForm = document.getElementById('rsvpForm');
+rsvpForm.onsubmit = async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // Capturamos lo que escribió el usuario
+    const nombre = document.getElementById('nombre').value;
+    const apellido = document.getElementById('apellido').value;
+    const integrantes = document.getElementById('integrantes').value;
 
-// Abrir modal
-if (openModalBtn) {
-    openModalBtn.onclick = () => {
-        modal.style.display = "flex";
+    submitBtn.innerText = "VALIDANDO...";
+    submitBtn.disabled = true;
+
+    // PRIMERO: Validamos
+    const resultado = await validarInvitado(nombre, apellido, integrantes);
+
+    if (resultado.error) {
+        alert(resultado.error);
+        submitBtn.innerText = "CONFIRMAR";
+        submitBtn.disabled = false;
+        return; // Si hay error, el código se corta aquí y no guarda nada
+    }
+
+    // SEGUNDO: Si pasó la validación, guardamos en la hoja principal
+    const datosFinales = {
+        nombre: nombre,
+        apellido: apellido,
+        telefono: document.getElementById('telefono').value,
+        integrantes: integrantes,
+        fecha: new Date().toLocaleString()
     };
-}
 
-// Cerrar modal al darle a "Cancelar"
-if (closeModalBtn) {
-    closeModalBtn.onclick = () => {
-        modal.style.display = "none";
-    };
-}
-
-// Cerrar modal si hacen clic fuera del recuadro blanco
-window.onclick = (event) => {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    try {
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "data": [datosFinales] })
+        });
+        alert("¡Confirmación exitosa!");
+        document.getElementById('modal').style.display = "none";
+        rsvpForm.reset();
+    } catch (e) {
+        alert("Error al guardar.");
+    } finally {
+        submitBtn.innerText = "CONFIRMAR";
+        submitBtn.disabled = false;
     }
 };
-
-// --- 3. Envío de Datos a la Base de Datos (SheetDB) ---
-if (rsvpForm) {
-    rsvpForm.onsubmit = async (e) => {
-        // Evitar que la página se recargue
-        e.preventDefault();
-
-        const submitBtn = document.getElementById('submitBtn');
-        const originalBtnText = submitBtn.innerText;
-
-        // Feedback visual: deshabilitar botón mientras envía
-        submitBtn.innerText = "ENVIANDO...";
-        submitBtn.disabled = true;
-
-        // Capturar los datos del formulario
-        const datos = {
-            nombre: document.getElementById('nombre').value.trim(),
-            apellido: document.getElementById('apellido').value.trim(),
-            telefono: document.getElementById('telefono').value.trim(),
-            integrantes: document.getElementById('integrantes').value,
-            fecha: new Date().toLocaleString('es-AR') // Fecha y hora local
-        };
-
-        try {
-            // Petición a la API
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                // SheetDB requiere que los datos vayan dentro de un objeto "data"
-                body: JSON.stringify({ "data": [datos] })
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result.created === 1) {
-                // ÉXITO
-                alert("¡Muchas gracias! Tu asistencia ha sido confirmada.");
-                rsvpForm.reset();
-                modal.style.display = "none";
-            } else {
-                // Error de la API (ej: nombres de columnas mal escritos)
-                console.error("Error de SheetDB:", result);
-                alert("Error al guardar: Verifica que las columnas en Google Sheets coincidan con los nombres del formulario.");
-            }
-
-        } catch (error) {
-            // Error de red o conexión
-            console.error("Error de red:", error);
-            alert("No se pudo conectar con la base de datos. Revisa tu conexión a internet.");
-        } finally {
-            // Restaurar botón
-            submitBtn.innerText = originalBtnText;
-            submitBtn.disabled = false;
-        }
-    };
-}
