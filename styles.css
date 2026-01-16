@@ -24,7 +24,7 @@ body {
 
 .invite-card.visible { opacity: 1; }
 
-.intro-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; color: #777; }
+.intro-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.5rem; margin-bottom: 25px; line-height: 1.5; color: #777; }
 .sparkle { font-family: 'Cormorant Garamond', serif; letter-spacing: 4px; color: #b59b61; margin-bottom: 10px; font-size: 1.1rem; }
 .name { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: #b59b61; margin-bottom: 20px; font-weight: 300; }
 
