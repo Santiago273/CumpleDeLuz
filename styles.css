@@ -1,210 +1,51 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background-color: #f9f7f2; /* Color crema suave */
+    background-color: #f9f7f2;
     font-family: 'Montserrat', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     color: #4a4a4a;
-}
-
-.container {
     padding: 20px;
 }
 
 .invite-card {
     background: white;
-    padding: 60px 40px;
+    padding: 50px 30px;
     text-align: center;
     max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
     border: 1px solid #eee;
     opacity: 0;
-    transform: translateY(20px);
     transition: all 1.5s ease-out;
 }
 
-.invite-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+.invite-card.visible { opacity: 1; }
 
-h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    letter-spacing: 5px;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
+.intro-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; color: #777; }
+.sparkle { font-family: 'Cormorant Garamond', serif; letter-spacing: 4px; color: #b59b61; margin-bottom: 10px; font-size: 1.1rem; }
+.name { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: #b59b61; margin-bottom: 20px; font-weight: 300; }
 
-.name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.5rem;
-    color: #b59b61; /* Dorado mate */
-    margin-bottom: 30px;
-}
+.info-extra { font-size: 0.85rem; line-height: 1.7; margin-top: 20px; }
+.small-hr { width: 40px; margin: 20px auto; border: 0; border-top: 1px solid #b59b61; }
+.despedida { margin-top: 20px; font-style: italic; color: #888; }
 
-.subtitle {
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-    margin-bottom: 20px;
+/* Botones */
+.btn, .btn-confirm {
+    background: none; border: 1px solid #b59b61; color: #b59b61;
+    padding: 12px 25px; cursor: pointer; letter-spacing: 2px;
+    font-size: 0.7rem; transition: 0.3s; margin-top: 20px;
 }
+.btn:hover, .btn-confirm:hover { background: #b59b61; color: white; }
+.btn-cancel { background: none; border: none; color: #999; cursor: pointer; font-size: 0.7rem; margin-left: 15px; text-decoration: underline; }
 
-.date-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
+/* Modal y Mensajes */
+.modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(3px); justify-content: center; align-items: center; }
+.modal-content { background: white; padding: 40px; width: 90%; max-width: 400px; text-align: center; border-radius: 2px; }
+input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; font-family: 'Montserrat', sans-serif; outline: none; }
 
-.day {
-    font-size: 2rem;
-    font-family: 'Cormorant Garamond', serif;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    padding: 0 15px;
-}
-
-.location {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-top: 20px;
-}
-
-hr {
-    width: 40px;
-    margin: 20px auto;
-    border: 0;
-    border-top: 1px solid #b59b61;
-}
-
-.btn {
-    margin-top: 40px;
-    padding: 12px 25px;
-    background: none;
-    border: 1px solid #b59b61;
-    color: #b59b61;
-    cursor: pointer;
-    letter-spacing: 2px;
-    font-size: 0.7rem;
-    transition: 0.3s;
-}
-
-.btn:hover {
-    background: #b59b61;
-    color: white;
-}
-/* Estilos para el Modal */
-.modal {
-    display: none; 
-    position: fixed;
-    z-index: 100;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-}
-
-.modal-content {
-    background-color: white;
-    margin: 10% auto;
-    padding: 40px;
-    max-width: 400px;
-    text-align: center;
-    border-radius: 5px;
-}
-
-.modal-content h3 {
-    font-family: 'Cormorant Garamond', serif;
-    margin-bottom: 20px;
-    color: #b59b61;
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.btn-secondary {
-    background: none;
-    border: none;
-    color: #999;
-    font-size: 0.7rem;
-    cursor: pointer;
-    margin-top: 10px;
-    text-decoration: underline;
-}
-
-/* --- ESTILOS GENERALES DE BOTONES --- */
-
-/* Botón Principal y Botón Enviar (Dorado con texto blanco al hover) */
-.btn, .btn-confirm, .btn-refresh {
-    background-color: transparent;
-    border: 1px solid #b59b61;
-    color: #b59b61;
-    padding: 12px 25px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-block;
-    text-decoration: none;
-    margin-top: 10px;
-}
-
-.btn:hover, .btn-confirm:hover, .btn-refresh:hover {
-    background-color: #b59b61;
-    color: white;
-    box-shadow: 0 4px 10px rgba(181, 155, 97, 0.3);
-}
-
-/* Botón de Cancelar (Más discreto) */
-.btn-cancel {
-    background: none;
-    border: none;
-    color: #888;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 10px;
-    margin-left: 10px;
-    transition: color 0.3s ease;
-}
-
-.btn-cancel:hover {
-    color: #333;
-    text-decoration: underline;
-}
-
-/* Estado Deshabilitado (Cuando se está enviando) */
-button:disabled {
-    border-color: #ccc !important;
-    color: #ccc !important;
-    cursor: not-allowed;
-    background-color: transparent !important;
-}
-
-/* Contenedor de botones en el formulario para alinearlos */
-.form-buttons {
-    margin-top: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+.status-message { font-size: 0.8rem; margin-top: 15px; padding: 10px; display: none; }
+.status-error { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
+.status-success { background: #f0fff4; color: #276749; border: 1px solid #9ae6b4; }
